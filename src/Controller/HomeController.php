@@ -13,8 +13,17 @@ class HomeController extends AppController
 {
     public function index()
     {
-        $this->loadModel('Articles');
-        $this->set('articles', $this->Articles->find('all'));
-
+        $userid = $this->request->query('userid');
+        if($userid !== null) {
+            $this->loadModel('Articles');
+            $this->set('articles', $this->Articles->find()
+                ->where(['user_id' => $userid]));
+        }
+        else {
+            $this->loadModel('Articles');
+            $this->set('articles', $this->Articles->find('all'));
+        }
+        $this->loadModel('Users');
+        $this->set('users', $this->Users->find('all'));
     }
 }
