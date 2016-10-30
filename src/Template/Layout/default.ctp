@@ -34,25 +34,29 @@ $cakeDescription = 'CakePHP: the rapid development php framework';
     <?= $this->fetch('script') ?>
 </head>
 <body>
-    <nav class="top-bar expanded" data-topbar role="navigation">
-        <ul class="title-area large-3 medium-4 columns">
-            <li class="name">
-                <h1><a href="/"><?= "BLOG" ?></a></h1>
-            </li>
+<nav class="top-bar expanded" data-topbar role="navigation">
+    <ul class="title-area large-3 medium-4 columns">
+        <li class="name">
+            <h1><a href="/">BLOG</a></h1>
+        </li>
+    </ul>
+    <div class="top-bar-section">
+        <ul class="right">
+            <?php if ($loggedIn): ?>
+                <li><a href="/articles">Artikel</a></li>
+                <li><a href="/users/logout">Logout</a></li>
+            <?php else: ?>
+                <li><a href="/users/login">Login</a></li>
+                <li><a href="/users/add">New Account</a></li>
+            <?php endif; ?>
         </ul>
-        <div class="top-bar-section">
-            <ul class="right">
-                <li><a  href="/articles">Artikel</a></li>
-                <li><a  href="/users/login">Login</a></li>
-                <li><a  href="/users/add">New Account</a></li>
-            </ul>
-        </div>
-    </nav>
-    <?= $this->Flash->render() ?>
-    <div class="container clearfix">
-        <?= $this->fetch('content') ?>
     </div>
-    <footer>
-    </footer>
+</nav>
+<?= $this->Flash->render() ?>
+<div class="container clearfix">
+    <?= $this->fetch('content') ?>
+</div>
+<footer>
+</footer>
 </body>
 </html>

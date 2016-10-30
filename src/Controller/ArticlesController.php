@@ -20,7 +20,8 @@ class ArticlesController extends AppController
 
     public function index()
     {
-        $this->set('articles', $this->Articles->find('all'));
+        $userId = $this->Auth->user('id');
+        $this->set('articles', $this->Articles->find()->where(['user_id' => $userId]));
     }
 
     public function view($id = null)
