@@ -37,17 +37,17 @@ $cakeDescription = 'CakePHP: the rapid development php framework';
 <nav class="top-bar expanded" data-topbar role="navigation">
     <ul class="title-area large-3 medium-4 columns">
         <li class="name">
-            <h1><a href="/">BLOG</a></h1>
+            <h1><?php echo $this->Html->link('Blog','/'); ?></h1>
         </li>
     </ul>
     <div class="top-bar-section">
         <ul class="right">
             <?php if ($loggedIn): ?>
-                <li><a href="/articles">Artikel</a></li>
-                <li><a href="/users/logout">Logout</a></li>
+                <li><?php echo $this->Html->link('Artikel','/articles'); ?></li>
+                <li><?php echo $this->Html->link('Logout','/users/logout'); ?></li>
             <?php else: ?>
-                <li><a href="/users/login">Login</a></li>
-                <li><a href="/users/add">New Account</a></li>
+                <li><?php echo $this->Html->link('Login','/users/login'); ?></li>
+                <li><?php echo $this->Html->link('New Account','/users/add'); ?></li>
             <?php endif; ?>
         </ul>
     </div>
