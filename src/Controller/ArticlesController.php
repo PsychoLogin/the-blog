@@ -7,7 +7,7 @@
  */
 
 namespace App\Controller;
-
+use Cake\ORM\TableRegistry;
 
 class ArticlesController extends AppController
 {

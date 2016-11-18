@@ -8,10 +8,20 @@
 
 namespace App\Controller;
 
+use Cake\Database\Schema\Table;
 use Cake\Event\Event;
+use Cake\ORM\TableRegistry;
 
 class UsersController extends AppController
 {
+    private $captureTable;
+
+    public function __construct($request = null, $response = null, $name = null, $eventManager = null, $components = null)
+    {
+        parent::__construct($request, $response, $name, $eventManager, $components);
+        $this->captureTable = TableRegistry::get('Captures')->setSession($this->request->session());
+        return $this;
+    }
 
     public function index()
     {
@@ -53,6 +63,7 @@ class UsersController extends AppController
             $user = $this->Auth->identify();
             if ($user) {
                 $this->Auth->setUser($user);
+                $this->captureTable->login($this->Auth->user('username'));
                 return $this->redirect($this->Auth->redirectUrl());
             }
             $this->Flash->error(__('Invalid username or password, try again'));
@@ -61,6 +72,8 @@ class UsersController extends AppController
 
     public function logout()
     {
+        $this->captureTable->logout();
+        $this->request->session()->destroy();
         return $this->redirect($this->Auth->logout());
     }
 

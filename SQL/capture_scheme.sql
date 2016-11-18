@@ -6,14 +6,14 @@ CREATE TABLE `blog_users` (
 
 CREATE TABLE `sessions` (
  `id` int NOT NULL AUTO_INCREMENT,
- `user_id` int NOT NULL,
+ `blog_user_id` int NOT NULL,
  `start` datetime NOT NULL,
  `stop` datetime NOT NULL,
  PRIMARY KEY (`id`),
  CONSTRAINT `FK_sessions_users` FOREIGN KEY (`user_id`) REFERENCES `blog_users` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-CREATE TABLE `static_session_data` (
+CREATE TABLE `static_session_datas` (
  `session_id` int NOT NULL,
  `os` varchar(255) NOT NULL,
  `lang` varchar(255) NOT NULL,
@@ -63,4 +63,5 @@ CREATE TABLE `classifications` (
  CONSTRAINT `FK_classifications_resources` FOREIGN KEY (`resource_id`) REFERENCES `resources` (`id`),
  CONSTRAINT `FK_classifications_tags` FOREIGN KEY (`tag_id`) REFERENCES `tags` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+
 
