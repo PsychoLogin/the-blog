@@ -10,9 +10,13 @@ namespace App\Model\Table;
 
 use Cake\ORM\Table;
 
-class ActionsTable extends Table
+class StaticSessionDatasTable extends Table
 {
     public static function defaultConnectionName() {
         return 'psylogincapture';
+    }
+    public function initialize(array $config)
+    {
+        $this->belongsTo('Sessions');
     }
 }

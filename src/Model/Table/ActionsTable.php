@@ -15,4 +15,10 @@ class ActionsTable extends Table
     public static function defaultConnectionName() {
         return 'psylogincapture';
     }
+    public function initialize(array $config)
+    {
+        $this->belongsTo('Sessions');
+        $this->belongsTo('ActionTypes');
+        $this->belongsTo('Resources');
+    }
 }

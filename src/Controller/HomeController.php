@@ -26,4 +26,7 @@ class HomeController extends AppController
         $this->loadModel('Users');
         $this->set('users', $this->Users->find('all'));
     }
+    public function info(){
+        echo get-get_browser();
+    }
 }

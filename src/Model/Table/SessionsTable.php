@@ -19,5 +19,8 @@ class SessionsTable extends Table
     public function initialize(array $config)
     {
         $this->belongsTo('BlogUsers');
+        $this->hasMany('StaticSessionDatas');
+        $this->hasMany('Actions');
     }
+
 }

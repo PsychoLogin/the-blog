@@ -12,6 +12,7 @@ use App\Model\Entity\BlogUser;
 use App\Model\Entity\Session;
 use Cake\I18n\Time;
 use Cake\ORM\Entity;
+use Cake\Log\Log;
 use Cake\ORM\Table;
 use Cake\ORM\TableRegistry;
 use Cake\Network\Exception\ServiceUnavailableException;
@@ -31,6 +32,12 @@ class CapturesTable extends Table
     function __construct() {
         $this->sessionsTable = TableRegistry::get('Sessions');
         $this->usersTable = TableRegistry::get('BlogUsers');
+        $this->staticSessionDataTable = TableRegistry::get('StaticSessionDatas');
+        $this->actionsTable = TableRegistry::get('Actions');
+        $this->actionTypesTable = TableRegistry::get('ActionTypes');
+        $this->resourcesTable = TableRegistry::get('Resources');
+        $this->classificationsTable = TableRegistry::get('Classifications');
+        $this->tagsTable = TableRegistry::get('Tags');
         return $this;
     }
 
@@ -44,7 +51,7 @@ class CapturesTable extends Table
     }
 
     public function login($username) {
-        if (!$this->session->check(CapturesTable::SESSION_ENTITY_KEY)) {
+        if (!$this->checkAuth()) {
             $user = $this->saveUser($username);
             $entity = $this->sessionsTable->newEntity();
             $entity->blog_user = $user;
@@ -55,23 +62,71 @@ class CapturesTable extends Table
         }
     }
 
+    public function checkAuth(){
+        if ($this->session->check(CapturesTable::SESSION_ENTITY_KEY)) return true;
+        return false;
+    }
+
+    public function saveStaticSessionData($referer, $clientIP){
+        $browser = get_browser(null, null);
+        $staticSession = $this->staticSessionDataTable->find()
+            ->where((['session_id' => $this->getSessionEntity()->id]))->first();
+        if (!$staticSession){
+            $entity = $this->staticSessionDataTable->newEntity();
+            $entity->os = $browser->platform;
+            $entity->lang = substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2);
+            $entity->browser = $browser->browser . " " . $browser->version;
+            $entity->referrer = $referer;
+            $entity->location = $clientIP;
+            $entity->session = $this->getSessionEntity();
+            $this->staticSessionDataTable->save($entity);
+        }
+    }
+
     public function logout() {
         $entity = $this->getSessionEntity();
         $entity->stop = Time::now()->toDateTimeString();
-        $this->sessionsTable->save($entity);
+        if (!$this->sessionsTable->save($entity)) throw new ServiceUnavailableException();
     }
 
     private function saveUser($username)
     {
         $blogUser = $this->usersTable->findByUsername($username)->first();
         if (!$blogUser) {
-            $bloguser = new BlogUser([
-                'username' => $username
-            ]);
-            if (!$this->usersTable->save($bloguser)) {
-                throw new ServiceUnavailableException();
-            }
+            $bloguser = new BlogUser(['username' => $username]);
+            if (!$this->usersTable->save($bloguser)) throw new ServiceUnavailableException();
         }
         return $blogUser;
+    }
+
+    public function saveAction($type, $description, $resource, $url, $content){
+        $actionTypeEntity = $this->actionTypesTable->find()
+            ->where((['title' => $type, 'description' => $description]))->first();
+
+        if (!$actionTypeEntity){
+            $actionTypeEntity = $this->actionsTable->newEntity();
+            $actionTypeEntity->title = $type;
+            $actionTypeEntity->description = $description;
+            if (!$this->actionTypesTable->save($actionTypeEntity)) throw new ServiceUnavailableException();
+        }
+        if (!$resource){
+            $resourceEntity = null;
+        }
+        else{
+            $resourceEntity = $this->resourcesTable->find()
+                ->where((['url' => $url, 'content' => $content]))->first();
+            if (!$resourceEntity){
+                $resourceEntity = $this->resourcesTable->newEntity();
+                $resourceEntity->url = $url;
+                $resourceEntity->content = $content;
+                if (!$this->resourcesTable->save($resourceEntity)) throw new ServiceUnavailableException();
+            }
+        }
+        $entity = $this->actionsTable->newEntity();
+        $entity->session = $this->getSessionEntity();
+        $entity->action_type = $actionTypeEntity;
+        $entity->resource = $resourceEntity;
+        $entity->time_stamp = Time::now()->toDateTimeString();
+        if (!$this->actionsTable->save($entity)) throw new ServiceUnavailableException();
     }
 }

@@ -15,4 +15,9 @@ class ResourcesTable extends Table
     public static function defaultConnectionName() {
         return 'psylogincapture';
     }
+    public function initialize(array $config)
+    {
+        $this->hasMany('Actions');
+        $this->hasMany('Classifications');
+    }
 }

@@ -15,4 +15,9 @@ class ClassificationsTable extends Table
     public static function defaultConnectionName() {
         return 'psylogincapture';
     }
+    public function initialize(array $config)
+    {
+        $this->belongsTo('Resources');
+        $this->belongsTo('Tags');
+    }
 }
