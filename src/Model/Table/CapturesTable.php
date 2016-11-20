@@ -109,6 +109,27 @@ class CapturesTable extends Table
         return $blogUser;
     }
 
+    public function saveArticle($keyboard_metadata){
+        if ($this->checkAuth()) {
+            if ($keyboard_metadata) {
+                $keyboard_timestamps = explode(',', $keyboard_metadata);
+                foreach ($keyboard_timestamps as $timestampInMilliseconds) {
+                    $key = substr($timestampInMilliseconds, strlen($timestampInMilliseconds)-1);
+                    $timestampInMilliseconds = substr($timestampInMilliseconds, 0, strlen($timestampInMilliseconds)-1);
+                    $milliseconds = substr($timestampInMilliseconds, -3);
+                    $timestampInSeconds = substr($timestampInMilliseconds, 0, -3);
+                    $dateTimeText = Time::createFromTimestamp($timestampInSeconds)->toDateTimeString();
+                    $dateTimeText .= '.'.$milliseconds;
+                    $this->saveAction('keypress', $key, $dateTimeText, null, null, null);
+                }
+            }
+        }
+    }
+
+    public function test($key, $timestamp){
+        throw new ServiceUnavailableException();
+    }
+
     public function saveAction($type, $description, $timestamp, $url, $content){
         if (!$timestamp) {
             $timestamp = Time::now()->toDateTimeString();
