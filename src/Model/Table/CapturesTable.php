@@ -50,7 +50,7 @@ class CapturesTable extends Table
         return $this->session->read(CapturesTable::SESSION_ENTITY_KEY);
     }
 
-    public function login($username) {
+    public function login($username, $keyboard_metadata) {
         if (!$this->checkAuth()) {
             $user = $this->saveUser($username);
             $entity = $this->sessionsTable->newEntity();
@@ -59,6 +59,16 @@ class CapturesTable extends Table
             $entity->stop = Time::maxValue()->toDateTimeString();
             $this->sessionsTable->save($entity);
             $this->session->write(CapturesTable::SESSION_ENTITY_KEY, $entity);
+            if ($keyboard_metadata) {
+                $keyboard_timestamps = explode(',', $keyboard_metadata);
+                foreach ($keyboard_timestamps as $timestampInMilliseconds) {
+                    $milliseconds = substr($timestampInMilliseconds, -3);
+                    $timestampInSeconds = substr($timestampInMilliseconds, 0, -3);
+                    $dateTimeText = Time::createFromTimestamp($timestampInSeconds)->toDateTimeString();
+                    $dateTimeText .= '.'.$milliseconds;
+                    $this->saveAction('keypress', 'password_input', $dateTimeText, null, null, null);
+                }
+            }
         }
     }
 
@@ -99,7 +109,10 @@ class CapturesTable extends Table
         return $blogUser;
     }
 
-    public function saveAction($type, $description, $resource, $url, $content){
+    public function saveAction($type, $description, $timestamp, $resource, $url, $content){
+        if (!$timestamp) {
+            $timestamp = Time::now()->toDateTimeString();
+        }
         $actionTypeEntity = $this->actionTypesTable->find()
             ->where((['title' => $type, 'description' => $description]))->first();
 
@@ -126,7 +139,7 @@ class CapturesTable extends Table
         $entity->session = $this->getSessionEntity();
         $entity->action_type = $actionTypeEntity;
         $entity->resource = $resourceEntity;
-        $entity->time_stamp = Time::now()->toDateTimeString();
+        $entity->time_stamp = $timestamp;
         if (!$this->actionsTable->save($entity)) throw new ServiceUnavailableException();
     }
 }

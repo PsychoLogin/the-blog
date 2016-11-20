@@ -14,12 +14,8 @@ class CapturesController extends AppController{
 
 
     public function index(){
-        //echo $_SERVER['HTTP_USER_AGENT'] . "\n\n";
-        //echo ("</br>");
-        // now try it
-        $staticSessionDataTable = TableRegistry::get('StaticSessionDatas');
-
-        $sessionData = $staticSessionDataTable->find(1)->first();
+        $browser = get_browser(null, true);
+        print_r($browser);
     }
 
 

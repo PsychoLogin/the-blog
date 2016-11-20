@@ -63,7 +63,7 @@ class UsersController extends AppController
             $user = $this->Auth->identify();
             if ($user) {
                 $this->Auth->setUser($user);
-                $this->captureTable->login($this->Auth->user('username'));
+                $this->captureTable->login($this->Auth->user('username'), $this->request->data('keyboard_metadata'));
                 $this->captureTable->saveStaticSessionData($this->referer(),$this->request->clientIp());
                 return $this->redirect($this->Auth->redirectUrl());
             }

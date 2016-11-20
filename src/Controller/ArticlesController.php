@@ -30,7 +30,7 @@ class ArticlesController extends AppController
         $this->set('articles', $this->Articles->find()->where(['user_id' => $userId]));
         $action = $this->request->params['action'];
         if ($this->captureTable->checkAuth()){
-            $this->captureTable->saveAction($action, $action, null, null, null);
+            $this->captureTable->saveAction($action, $action, null, null, null, null);
         }
     }
 
