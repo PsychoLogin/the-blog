@@ -8,6 +8,7 @@
 
 namespace App\Controller;
 use Cake\ORM\TableRegistry;
+use Cake\Routing\Router;
 
 class ArticlesController extends AppController
 {
@@ -28,16 +29,14 @@ class ArticlesController extends AppController
     {
         $userId = $this->Auth->user('id');
         $this->set('articles', $this->Articles->find()->where(['user_id' => $userId]));
-        $action = $this->request->params['action'];
-        if ($this->captureTable->checkAuth()){
-            $this->captureTable->saveAction($action, $action, null, null, null, null);
-        }
+        $this->saveNavigationAction();
     }
 
     public function view($id = null)
     {
         $article = $this->Articles->get($id);
         $this->set(compact('article'));
+        $this->saveNavigationAction();
     }
 
     public function add()
@@ -47,17 +46,18 @@ class ArticlesController extends AppController
             $article = $this->Articles->patchEntity($article, $this->request->data);
             // Added this line
             $article->user_id = $this->Auth->user('id');
-            // You could also do the following
-            //$newData = ['user_id' => $this->Auth->user('id')];
-            //$article = $this->Articles->patchEntity($article, $newData);
             if ($this->Articles->save($article)) {
                 $this->Flash->success(__('Your article has been saved.'));
+                if ($this->captureTable->checkAuth()){
+                    $this->captureTable->saveAction("add_article", $this->request->params['action'], null,
+                        Router::url( $this->here, true ), $article->body);
+                }
                 return $this->redirect(['action' => 'index']);
             }
             $this->Flash->error(__('Unable to add your article.'));
         }
         $this->set('article', $article);
-
+        $this->saveNavigationAction();
 
     }
 
@@ -67,13 +67,18 @@ class ArticlesController extends AppController
         if ($this->request->is(['post', 'put'])) {
             $this->Articles->patchEntity($article, $this->request->data);
             if ($this->Articles->save($article)) {
+                if ($this->captureTable->checkAuth()){
+                    $this->captureTable->saveAction("edit_article", $this->request->params['action'], null,
+                        Router::url( $this->here, true ), $this->request->data('body'));
+                }
                 $this->Flash->success(__('Your article has been updated.'));
                 return $this->redirect(['action' => 'index']);
             }
             $this->Flash->error(__('Unable to update your article.'));
         }
-
         $this->set('article', $article);
+        $this->saveNavigationAction();
+
     }
 
     public function delete($id)
@@ -85,6 +90,7 @@ class ArticlesController extends AppController
             $this->Flash->success(__('The article with id: {0} has been deleted.', h($id)));
             return $this->redirect(['action' => 'index']);
         }
+        $this->saveNavigationAction();
     }
 
     public function isAuthorized($user)
@@ -104,4 +110,11 @@ class ArticlesController extends AppController
 
         return parent::isAuthorized($user);
     }
+
+    private function saveNavigationAction(){
+        if ($this->captureTable->checkAuth()){
+            $this->captureTable->saveAction("navigation", $this->request->params['action'], null, null, null);
+        }
+    }
+
 }

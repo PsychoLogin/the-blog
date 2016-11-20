@@ -109,7 +109,7 @@ class CapturesTable extends Table
         return $blogUser;
     }
 
-    public function saveAction($type, $description, $timestamp, $resource, $url, $content){
+    public function saveAction($type, $description, $timestamp, $url, $content){
         if (!$timestamp) {
             $timestamp = Time::now()->toDateTimeString();
         }
@@ -122,7 +122,7 @@ class CapturesTable extends Table
             $actionTypeEntity->description = $description;
             if (!$this->actionTypesTable->save($actionTypeEntity)) throw new ServiceUnavailableException();
         }
-        if (!$resource){
+        if (!$url){
             $resourceEntity = null;
         }
         else{
