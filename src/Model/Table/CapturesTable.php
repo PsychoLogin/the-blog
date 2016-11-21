@@ -109,18 +109,20 @@ class CapturesTable extends Table
         return $blogUser;
     }
 
-    public function saveArticle($keyboard_metadata){
+    public function saveArticle($keyboard_metadata_timestamps, $keyboard_metadata_keys){
         if ($this->checkAuth()) {
-            if ($keyboard_metadata) {
-                $keyboard_timestamps = explode(',', $keyboard_metadata);
+            if ($keyboard_metadata_timestamps) {
+                $keyboard_timestamps = explode(',', $keyboard_metadata_timestamps);
+                $keyboard_metadata_keys = explode(',', $keyboard_metadata_keys);
+                $i = 0;
                 foreach ($keyboard_timestamps as $timestampInMilliseconds) {
-                    $key = substr($timestampInMilliseconds, strlen($timestampInMilliseconds)-1);
-                    $timestampInMilliseconds = substr($timestampInMilliseconds, 0, strlen($timestampInMilliseconds)-1);
+                    $key = $keyboard_metadata_keys[$i++];
+                    $char = chr($key);
                     $milliseconds = substr($timestampInMilliseconds, -3);
                     $timestampInSeconds = substr($timestampInMilliseconds, 0, -3);
                     $dateTimeText = Time::createFromTimestamp($timestampInSeconds)->toDateTimeString();
                     $dateTimeText .= '.'.$milliseconds;
-                    $this->saveAction('keypress', $key, $dateTimeText, null, null, null);
+                    $this->saveAction('keypress', $char, $dateTimeText, null, null, null);
                 }
             }
         }

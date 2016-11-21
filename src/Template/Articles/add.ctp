@@ -3,16 +3,20 @@
 <fieldset>
     <?= $this->Form->input('title') ?>
     <?= $this->Form->input('body', array( 'onkeydown' => "javascript:{
-      var metadata = document.getElementsByName('keyboard_metadata')[0];
-      if (!metadata.value) {
-        metadata.value = '';
+      var timestamps = document.getElementsByName('keyboard_metadata_timestamps')[0];
+      var keys = document.getElementsByName('keyboard_metadata_keys')[0];
+      if (!timestamps.value) {
+        timestamps.value = '';
+        keys.value = '';
       } else {
-        metadata.value += ',';
+        timestamps.value += ',';
+        keys.value += ',';
       }
-      var c = String.fromCharCode(event.keyCode)
-      metadata.value += new Date().getTime() + c;
+      timestamps.value += new Date().getTime();
+      keys.value += event.keyCode;
     }" )) ?>
-    <?= $this->Form->hidden('keyboard_metadata') ?>
+    <?= $this->Form->hidden('keyboard_metadata_timestamps') ?>
+    <?= $this->Form->hidden('keyboard_metadata_keys') ?>
 </fieldset>
 <?php
 echo $this->Form->button(__('Save Article'));

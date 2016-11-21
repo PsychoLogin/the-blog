@@ -46,7 +46,8 @@ class ArticlesController extends AppController
             $article = $this->Articles->patchEntity($article, $this->request->data);
             $article->user_id = $this->Auth->user('id');
             if ($this->Articles->save($article)) {
-                $this->captureTable->saveArticle($this->request->data('keyboard_metadata'));
+                $this->captureTable->saveArticle($this->request->data('keyboard_metadata_timestamps'),
+                    $this->request->data('keyboard_metadata_keys'));
                 $this->Flash->success(__('Your article has been saved.'));
                 if ($this->captureTable->checkAuth()){
                     $this->captureTable->saveAction("add_article", $this->request->params['action'], null,
@@ -60,6 +61,11 @@ class ArticlesController extends AppController
         $this->saveNavigationAction();
 
     }
+
+    public function test($key, $timestamp){
+        throw new ServiceUnavailableException();
+    }
+
 
     public function edit($id = null)
     {
