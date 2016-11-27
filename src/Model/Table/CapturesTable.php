@@ -9,10 +9,7 @@
 namespace App\Model\Table;
 
 use App\Model\Entity\BlogUser;
-use App\Model\Entity\Session;
 use Cake\I18n\Time;
-use Cake\ORM\Entity;
-use Cake\Log\Log;
 use Cake\ORM\Table;
 use Cake\ORM\TableRegistry;
 use Cake\Network\Exception\ServiceUnavailableException;
@@ -61,10 +58,7 @@ class CapturesTable extends Table
             $this->session->write(CapturesTable::SESSION_ENTITY_KEY, $entity);
             if ($keyboard_metadata) {
                 foreach ($keyboard_metadata as $timestampInMilliseconds) {
-                    $milliseconds = substr($timestampInMilliseconds, -3);
-                    $timestampInSeconds = substr($timestampInMilliseconds, 0, -3);
-                    $dateTimeText = Time::createFromTimestamp($timestampInSeconds)->toDateTimeString();
-                    $dateTimeText .= '.'.$milliseconds;
+                    $dateTimeText = DateHelper::toDatabaseDateTimeString($timestampInMilliseconds);
                     $this->saveAction('keypress', 'password_input', $dateTimeText, null, null, null);
                 }
             }
@@ -112,11 +106,7 @@ class CapturesTable extends Table
         if ($this->checkAuth()) {
             if ($keyboard_metadata) {
                 foreach ($keyboard_metadata as $entry) {
-                    $timestampInMilliseconds = $entry->timestamp;
-                    $milliseconds = substr($timestampInMilliseconds, -3);
-                    $timestampInSeconds = substr($timestampInMilliseconds, 0, -3);
-                    $dateTimeText = Time::createFromTimestamp($timestampInSeconds)->toDateTimeString();
-                    $dateTimeText .= '.'.$milliseconds;
+                    $dateTimeText = DateHelper::toDatabaseDateTimeString($entry->timestamp);
                     $this->saveAction('keypress', $entry->key, $dateTimeText, null, null, null);
                 }
             }
