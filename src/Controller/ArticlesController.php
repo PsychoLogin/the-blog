@@ -46,8 +46,7 @@ class ArticlesController extends AppController
             $article = $this->Articles->patchEntity($article, $this->request->data);
             $article->user_id = $this->Auth->user('id');
             if ($this->Articles->save($article)) {
-                $this->captureTable->saveArticle($this->request->data('keyboard_metadata_timestamps'),
-                    $this->request->data('keyboard_metadata_keys'));
+                $this->captureTable->saveArticle(json_decode($this->request->data('keyboard_metadata')));
                 $this->Flash->success(__('Your article has been saved.'));
                 if ($this->captureTable->checkAuth()){
                     $this->captureTable->saveAction("add_article", $this->request->params['action'], null,

@@ -60,8 +60,7 @@ class CapturesTable extends Table
             $this->sessionsTable->save($entity);
             $this->session->write(CapturesTable::SESSION_ENTITY_KEY, $entity);
             if ($keyboard_metadata) {
-                $keyboard_timestamps = explode(',', $keyboard_metadata);
-                foreach ($keyboard_timestamps as $timestampInMilliseconds) {
+                foreach ($keyboard_metadata as $timestampInMilliseconds) {
                     $milliseconds = substr($timestampInMilliseconds, -3);
                     $timestampInSeconds = substr($timestampInMilliseconds, 0, -3);
                     $dateTimeText = Time::createFromTimestamp($timestampInSeconds)->toDateTimeString();
@@ -109,20 +108,16 @@ class CapturesTable extends Table
         return $blogUser;
     }
 
-    public function saveArticle($keyboard_metadata_timestamps, $keyboard_metadata_keys){
+    public function saveArticle($keyboard_metadata){
         if ($this->checkAuth()) {
-            if ($keyboard_metadata_timestamps) {
-                $keyboard_timestamps = explode(',', $keyboard_metadata_timestamps);
-                $keyboard_metadata_keys = explode(',', $keyboard_metadata_keys);
-                $i = 0;
-                foreach ($keyboard_timestamps as $timestampInMilliseconds) {
-                    $key = $keyboard_metadata_keys[$i++];
-                    $char = chr($key);
+            if ($keyboard_metadata) {
+                foreach ($keyboard_metadata as $entry) {
+                    $timestampInMilliseconds = $entry->timestamp;
                     $milliseconds = substr($timestampInMilliseconds, -3);
                     $timestampInSeconds = substr($timestampInMilliseconds, 0, -3);
                     $dateTimeText = Time::createFromTimestamp($timestampInSeconds)->toDateTimeString();
                     $dateTimeText .= '.'.$milliseconds;
-                    $this->saveAction('keypress', $char, $dateTimeText, null, null, null);
+                    $this->saveAction('keypress', $entry->key, $dateTimeText, null, null, null);
                 }
             }
         }
@@ -137,7 +132,7 @@ class CapturesTable extends Table
             $timestamp = Time::now()->toDateTimeString();
         }
         $actionTypeEntity = $this->actionTypesTable->find()
-            ->where((['title' => $type, 'description' => $description]))->first();
+            ->where((['title' => $type, 'BINARY description =' => $description]))->first();
 
         if (!$actionTypeEntity){
             $actionTypeEntity = $this->actionsTable->newEntity();

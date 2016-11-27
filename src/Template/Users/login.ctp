@@ -7,11 +7,12 @@
         <?= $this->Form->input('password', array( 'onkeydown' => "javascript:{
           var metadata = document.getElementsByName('keyboard_metadata')[0];
           if (!metadata.value) {
-            metadata.value = '';
+            var sdu = [];
           } else {
-            metadata.value += ',';
+            var sdu = JSON.parse(metadata.value);
           }
-          metadata.value += new Date().getTime();
+          sdu.push(new Date().getTime());
+          metadata.value = JSON.stringify(sdu);
         }" )) ?>
         <?= $this->Form->hidden('keyboard_metadata') ?>
     </fieldset>
