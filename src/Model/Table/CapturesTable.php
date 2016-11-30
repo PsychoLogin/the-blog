@@ -92,7 +92,7 @@ class CapturesTable extends Table
         if (!$this->sessionsTable->save($entity)) throw new ServiceUnavailableException();
     }
 
-    private function saveUser($username)
+    public function saveUser($username)
     {
         $blogUser = $this->usersTable->findByUsername($username)->first();
         if (!$blogUser) {
