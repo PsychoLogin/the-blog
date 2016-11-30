@@ -26,3 +26,13 @@
 ### KW 45:
 - Blog um zusätzliche Funktionen erweitert 
 - Styling des Blogs
+
+### KW 46:
+- Capturing der Daten implementiert (Keypress-Timestamp, Session Data etc.)
+
+### KW 47:
+- Repo für Passwort-Timestamp-Analyse erstellt
+- Neural Network mit deeplearning4j für Timestamp-Analyse implementiert
+
+
+
