@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css?family=Open+Sans');
+
 .disabled a,
 a.disabled {
     pointer-events: none;
@@ -19,13 +21,40 @@ a {
     color: #15848F;
 }
 
+article{
+    font-family: 'open Sans';
+    background-color: #e7e9fd;
+    border: 0px solid black;
+    margin-left: 10%;
+    margin-right: 10%;
+    margin-bottom: 10px;
+    padding: 10px 0;
+    width: 80%;
+    border-radius: 5px;
+    text-align: center;
+
+}
+
+
 header {
-    background-color: #D33C44;
-    color: #ffffff;
+    font-weight: 800;
+    text-transform: capitalize;
     font-size: 30px;
-    height: 84px;
-    line-height: 64px;
-    padding: 16px 0px;
+    height: 50px;
+    text-align: center;
+    /*line-height: 30px;*/
+    padding: 5px;
+    box-shadow: 0px 1px rgba(0, 0, 0, 0.24);
+}
+
+header p {
+    font-weight: 800;
+    text-transform: capitalize;
+    font-size: 30px;
+    height: 50px;
+    text-align: center;
+    /*line-height: 30px;*/
+    padding: 5px;
     box-shadow: 0px 1px rgba(0, 0, 0, 0.24);
 }
 
@@ -373,10 +402,15 @@ pre {
 
 .top-bar.expanded .title-area {
     background: #01545b;
+    height: 80px;
+    padding-left: 25px;
+    padding-top: 10px;
+
 }
 
 .top-bar.expanded, .top-bar,.top-bar-section ul li,.top-bar-section li:not(.has-form) a:not(.button) {
     background: #116d76;
+
 }
 
 .top-bar-section li:not(.has-form) a:not(.button):hover {
@@ -437,6 +471,10 @@ fieldset {
     border: none;
     padding: 1.25rem;
     margin: 1.125rem 0;
+    max-width: 800px;
+    margin-left:auto;
+    margin-right:auto;
+
 }
 
 fieldset legend {

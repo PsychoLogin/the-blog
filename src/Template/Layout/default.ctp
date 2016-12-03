@@ -21,13 +21,13 @@ $cakeDescription = 'CakePHP: the rapid development php framework';
     <?= $this->Html->charset() ?>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>
-        <?= $cakeDescription ?>:
-        <?= $this->fetch('title') ?>
+        PsyLogin - Blog
     </title>
     <?= $this->Html->meta('icon') ?>
 
     <?= $this->Html->css('base.css') ?>
     <?= $this->Html->css('cake.css') ?>
+    <?= $this->Html->css('psylogin.css') ?>
 
     <?= $this->fetch('meta') ?>
     <?= $this->fetch('css') ?>
@@ -35,19 +35,27 @@ $cakeDescription = 'CakePHP: the rapid development php framework';
 </head>
 <body>
 <nav class="top-bar expanded" data-topbar role="navigation">
-    <ul class="title-area large-3 medium-4 columns">
+    <ul class="title-area large-4 medium-4 columns">
         <li class="name">
-            <h1><?php echo $this->Html->link('Blog','/'); ?></h1>
+            <?php echo $this->Html->link(
+            $this->Html->image('/webroot/img/psylogin.logo.V2.white.png', array('width'=>'200px')), '/', array('escape'
+            => false));?>
         </li>
     </ul>
     <div class="top-bar-section">
         <ul class="right">
             <?php if ($loggedIn): ?>
-                <li><?php echo $this->Html->link('Artikel','/articles'); ?></li>
-                <li><?php echo $this->Html->link('Logout','/users/logout'); ?></li>
+            <li>
+                <ul class="dropdown-custom clearfix"><a href="#">Article</a>
+                    <li><?php echo $this->Html->link('Artikel schreiben','/articles/add'); ?></li>
+                    <li><?php echo $this->Html->link('Meine Artikel','/articles'); ?></li>
+                </ul>
+            </li>
+
+            <li><?php echo $this->Html->link('Logout','/users/logout'); ?></li>
             <?php else: ?>
-                <li><?php echo $this->Html->link('Login','/users/login'); ?></li>
-                <li><?php echo $this->Html->link('New Account','/users/add'); ?></li>
+            <li><?php echo $this->Html->link('Login','/users/login'); ?></li>
+            <li><?php echo $this->Html->link('New Account','/users/add'); ?></li>
             <?php endif; ?>
         </ul>
     </div>

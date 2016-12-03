@@ -1,8 +1,13 @@
 <h1>Blog articles</h1>
-<h1><?php echo $this->Html->link('New Article','/articles/add'); ?></h1>
+
 <?php foreach ($articles as $article): ?>
     <article>
-        <header><?= $article->title ?></header>
+        <h2><?= $article->title ?></h2>
+        <p>
+            <?= $article->created->format('d. F Y') ?>
+            <br><?= $article->user->username ?>
+
+        </p>
         <p><?= $article->body ?></p>
     </article>
 <?php endforeach; ?>

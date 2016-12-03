@@ -15,6 +15,7 @@ class ArticlesTable extends Table
     public function initialize(array $config)
     {
         $this->addBehavior('Timestamp');
+        $this->belongsTo('Users');
     }
 
     public function validationDefault(Validator $validator)

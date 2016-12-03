@@ -21,7 +21,9 @@ class HomeController extends AppController
         }
         else {
             $this->loadModel('Articles');
-            $this->set('articles', $this->Articles->find('all'));
+            $this->set('articles', $this->Articles->find('all', [
+                'order' => ['Articles.created' => 'DESC']
+            ])->contain(['Users']));
         }
         $this->loadModel('Users');
         $this->set('users', $this->Users->find('all'));
