@@ -40,12 +40,17 @@ class UsersController extends AppController
         if ($this->request->is('post')) {
             $user = $this->Users->patchEntity($user, $this->request->data);
             if ($this->Users->save($user)) {
+                $this->captureTable->saveUser($user->username);
                 $this->Flash->success(__('The user has been saved.'));
                 return $this->redirect(['action' => 'add']);
             }
             $this->Flash->error(__('Unable to add the user.'));
         }
         $this->set('user', $user);
+    }
+
+    public function testAdd($user){
+        throw new ServiceUnavailableException();
     }
 
     public function beforeFilter(Event $event)
