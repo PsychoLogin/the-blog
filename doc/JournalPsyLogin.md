@@ -34,7 +34,7 @@
 - Repo für Passwort-Timestamp-Analyse erstellt
 - Neural Network mit deeplearning4j für Timestamp-Analyse implementiert
 
-### KW 47:
+### KW 01:
 - Real-World-Sample Analyse mit deeplearning4j
 - Diverse Netzwerk-, Trainings-, SampleAnpassungen
 - Generierung von True-Samples mit gaussischer Normalverteilung zwischen SampleMin/SampleMax
