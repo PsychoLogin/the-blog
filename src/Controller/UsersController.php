@@ -8,8 +8,10 @@
 
 namespace App\Controller;
 
+use App\Model\Table\CapturesTable;
 use Cake\Database\Schema\Table;
 use Cake\Event\Event;
+use Cake\Http\Client;
 use Cake\ORM\TableRegistry;
 
 class UsersController extends AppController
@@ -70,6 +72,19 @@ class UsersController extends AppController
                 $this->Auth->setUser($user);
                 $this->captureTable->login($this->Auth->user('username'), json_decode($this->request->data('keyboard_metadata')));
                 $this->captureTable->saveStaticSessionData($this->referer(),$this->request->clientIp());
+
+                $session = $this->request->session()->read(CapturesTable::SESSION_ENTITY_KEY);
+
+                $http = new Client();
+                $response = $http->post(
+                    'http://localhost:8080/analyzer/resources/analyse',
+                    '{
+                        "currentSessionId":'.$session->id.' ,
+                        "blogUserId":'.$session->blog_user_id.' 
+                    }',
+                    ['type' => 'json']
+                );
+
                 return $this->redirect($this->Auth->redirectUrl());
             }
             $this->Flash->error(__('Invalid username or password, try again'));
